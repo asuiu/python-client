@@ -4,12 +4,13 @@ written as short Python scripts.
 
 See README.md for documentation and instructions.
 """
+import socket
 
 __author__ = 'Cosmo Harrigan'
 
 from configuration import *
 import os
-from subprocess import check_call, Popen
+from subprocess import Popen
 from multiprocessing import Process
 
 
@@ -393,7 +394,20 @@ def relex(sentence, display=True, concise=True):
             print result
         else:
             return result
+    else:
+        s = socket.socket(
+            socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((IP_ADDRESS, RELEX_PORT))
+        s.sendall(sentence+'\n')
+        buf = s.recv(1024)
+        data = buf
+        while buf:
+            buf = s.recv(1024)
+            data += buf
 
+        if display:
+            print(data)
+        s.close()
 
 def to_logic(sentence, clear=True, display=True):
     """
@@ -430,7 +444,7 @@ class RelExServer(object):
             self.process.daemon = True
             self.process.start()
         else:
-            assert "Currently only implemented for Vagrant"
+            p = Popen( RELEX_START, shell=True)
 
         sleep(OPENCOG_INIT_DELAY)
 
@@ -444,7 +458,7 @@ class RelExServer(object):
             self.process.daemon = True
             self.process.start()
         else:
-            assert "Currently only implemented for Vagrant"
+            os.system(RELEX_STOP)
 
 
 class Server(object):

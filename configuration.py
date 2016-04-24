@@ -68,6 +68,7 @@ def clear_mongodb():
 
 IP_ADDRESS = '127.0.0.1'
 PORT = '5000'
+RELEX_PORT = 4444
 uri = 'http://' + IP_ADDRESS + ':' + PORT + '/api/v1.1/'
 headers = {'content-type': 'application/json'}
 
@@ -84,6 +85,8 @@ if not USE_VAGRANT:
     OPENCOG_COGSERVER_STOP = "pkill cogserver"
     OPENCOG_SOURCE_FOLDER = expanduser("~") + "/opencog/opencog/"
     OPENCOG_SUBFOLDER = expanduser("~") + '/opencog/build'
+    RELEX_START = "cd ~/relex && ./opencog-server.sh"
+    RELEX_STOP = "pkill opencog-server"
 else:
     OPENCOG_COGSERVER_START = "cd ~/opencog/build && ./opencog/server/cogserver"
     RELEX_START = "cd ~/relex && ./opencog-server.sh"
